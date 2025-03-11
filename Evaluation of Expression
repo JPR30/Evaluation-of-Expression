@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class ExpressionConverter {
+public class Evaluationofexpression {
     
     // Method to define operator precedence
     private static int precedence(char operator) {
@@ -97,3 +97,4 @@ public class ExpressionConverter {
         scanner.close();
     }
 }
+
