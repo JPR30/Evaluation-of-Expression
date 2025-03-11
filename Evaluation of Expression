@@ -1,0 +1,99 @@
+import java.util.*;
+
+public class ExpressionConverter {
+    
+    // Method to define operator precedence
+    private static int precedence(char operator) {
+        switch (operator) {
+            case '+': case '-': return 1;
+            case '*': case '/': return 2;
+            case '^': return 3;
+            default: return -1;
+        }
+    }
+
+    // Convert infix to postfix
+    public static String infixToPostfix(String infix) {
+        StringBuilder result = new StringBuilder();
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : infix.toCharArray()) {
+            if (Character.isLetterOrDigit(c)) { 
+                result.append(c);
+            } 
+            else if (c == '(') {
+                stack.push(c);
+            } 
+            else if (c == ')') {
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    result.append(stack.pop());
+                }
+                stack.pop(); // Remove '('
+            } 
+            else { // Operator
+                while (!stack.isEmpty() && precedence(c) <= precedence(stack.peek())) {
+                    result.append(stack.pop());
+                }
+                stack.push(c);
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            result.append(stack.pop());
+        }
+
+        return result.toString();
+    }
+
+    // Convert infix to prefix
+    public static String infixToPrefix(String infix) {
+        StringBuilder reversed = new StringBuilder(infix).reverse();
+        Stack<Character> stack = new Stack<>();
+        StringBuilder result = new StringBuilder();
+
+        for (char c : reversed.toString().toCharArray()) {
+            if (Character.isLetterOrDigit(c)) {
+                result.append(c);
+            } 
+            else if (c == ')') {
+                stack.push(c);
+            } 
+            else if (c == '(') {
+                while (!stack.isEmpty() && stack.peek() != ')') {
+                    result.append(stack.pop());
+                }
+                stack.pop(); // Remove ')'
+            } 
+            else { // Operator
+                while (!stack.isEmpty() && precedence(c) < precedence(stack.peek())) {
+                    result.append(stack.pop());
+                }
+                stack.push(c);
+            }
+        }
+
+        while (!stack.isEmpty()) {
+            result.append(stack.pop());
+        }
+
+        return result.reverse().toString();
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Get infix input from user
+        System.out.print("Enter infix expression: ");
+        String infix = scanner.nextLine();
+        
+        // Convert to prefix and postfix
+        String postfix = infixToPostfix(infix);
+        String prefix = infixToPrefix(infix);
+        
+        // Output results
+        System.out.println("Prefix is: " + prefix);
+        System.out.println("Postfix is: " + postfix);
+        
+        scanner.close();
+    }
+}
